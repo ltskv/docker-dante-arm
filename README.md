@@ -13,7 +13,7 @@ What is Dante
 Usage example
 -------------
 
-    $ docker run -d -p 1080:1080 wernight/dante
+    $ docker run -d -p 1080:1080 ltskv/dante-arm
 
 Change its configuration by mounting a custom `/etc/sockd.conf`
 (see [sample config files](http://www.inet.no/dante/doc/latest/config/server.html)).

@@ -14,20 +14,23 @@ RUN set -x \
         build-base \
         curl \
         linux-pam-dev \
+    # Install dumb-init (avoid PID 1 issues).
+    # https://github.com/Yelp/dumb-init
+ && cd /tmp \
+ && curl -L https://github.com/Yelp/dumb-init/archive/v1.2.5.tar.gz | tar xz \
+ && cd dumb-init-1.2.5 \
+ && make SHELL=sh \
+ && cp dumb-init /usr/local/bin/dumb-init \
  && cd /tmp \
     # https://www.inet.no/dante/download.html
  && curl -L https://www.inet.no/dante/files/dante-1.4.2.tar.gz | tar xz \
- && cd dante-* \
+ && cd dante-1.4.2 \
     # See https://lists.alpinelinux.org/alpine-devel/3932.html
  && ac_cv_func_sched_setscheduler=no ./configure \
- && make install \
+ && make -j4 install \
  && cd / \
     # Add an unprivileged user.
  && adduser -S -D -u 8062 -H sockd \
-    # Install dumb-init (avoid PID 1 issues).
-    # https://github.com/Yelp/dumb-init
- && curl -Lo /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.1.3/dumb-init_1.1.3_amd64 \
- && chmod +x /usr/local/bin/dumb-init \
     # Clean up.
  && rm -rf /tmp/* \
  && apk del --purge .build-deps
